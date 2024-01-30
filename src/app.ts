@@ -4,6 +4,7 @@ import sendResponse from "./app/utils/sendResponse";
 import httpStatus from "http-status";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import router from "./app/routes";
 
 const app: Application = express();
 
@@ -16,6 +17,7 @@ app.use(
 );
 
 // application routes
+app.use("/api/v1", router);
 
 // testing route
 app.get("/", (req: Request, res: Response) => {

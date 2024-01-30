@@ -8,6 +8,7 @@ let server: Server;
 async function main() {
     try {
         await mongoose.connect(config.database_url as string);
+        console.log("Database connection established successfully.");
 
         server = app.listen(config.port, () => {
             console.log(`Computer Garage app listening on port ${config.port}`);
