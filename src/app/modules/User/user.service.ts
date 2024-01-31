@@ -32,9 +32,13 @@ const loginUser = async (payload: Partial<TUser>) => {
         config.jwt_access_expires_in as string,
     );
 
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const { password, createdAt, updatedAt, ...remainingUserInfo } =
+        user.toObject();
+
     return {
+        user: remainingUserInfo,
         token: accessToken,
-        user,
     };
 };
 
