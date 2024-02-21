@@ -11,4 +11,5 @@ export type TProduct = {
     warrantyPeriod: number;
     color?: string;
     availability: "in stock" | "out of stock";
+    description: string;
 };

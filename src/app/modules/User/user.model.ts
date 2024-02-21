@@ -9,9 +9,6 @@ const userSchema = new Schema<TUser, UserModel>(
             type: String,
             required: true,
         },
-        photoUrl: {
-            type: String,
-        },
         email: {
             type: String,
             required: true,
@@ -22,6 +19,10 @@ const userSchema = new Schema<TUser, UserModel>(
             required: true,
             minlength: 6,
             maxlength: 32,
+        },
+        role: {
+            type: String,
+            default: "user",
         },
     },
     {

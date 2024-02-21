@@ -6,13 +6,13 @@ import { UserServices } from "./user.service";
 const registerUser = catchAsync(async (req, res) => {
     const userData = req.body;
 
-    const result = await UserServices.registerUserIntoDB(userData);
+    await UserServices.registerUserIntoDB(userData);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "User is created succesfully",
-        data: result,
+        data: null,
     });
 });
 

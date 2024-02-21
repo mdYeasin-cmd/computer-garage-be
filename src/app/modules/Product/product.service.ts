@@ -8,7 +8,7 @@ const addProductIntoDB = async (productInfo: TProduct) => {
 };
 
 const getAllProductsFromDB = async () => {
-    const result = await Product.find({});
+    const result = await Product.find({}).sort({ createdAt: -1 });
 
     return result;
 };
@@ -29,9 +29,7 @@ const updateAProductByIdIntoDB = async (
 };
 
 const deleteAProductByIdFromDB = async (productId: string) => {
-    const result = Product.findByIdAndUpdate(productId, {
-        isDeleted: true,
-    });
+    const result = Product.findByIdAndDelete(productId);
 
     return result;
 };

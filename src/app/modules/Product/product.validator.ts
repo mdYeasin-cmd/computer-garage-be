@@ -63,6 +63,11 @@ const createProductValidatorSchema = z.object({
                     "Availability must be either 'in stock' or 'out of stock'",
             },
         ),
+        description: z
+            .string({
+                invalid_type_error: "Color must be a string",
+            })
+            .optional(),
     }),
 });
 
