@@ -34,10 +34,19 @@ const deleteAProductByIdFromDB = async (productId: string) => {
     return result;
 };
 
+const bulkProductDeleteFromDB = async (productIds: string[]) => {
+    const result = await Product.deleteMany({
+        _id: { $in: productIds },
+    });
+
+    return result;
+};
+
 export const ProductServices = {
     addProductIntoDB,
     getAllProductsFromDB,
     getAProductByIdFromDB,
     updateAProductByIdIntoDB,
     deleteAProductByIdFromDB,
+    bulkProductDeleteFromDB,
 };

@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/", ProductControllers.addProduct);
 
+router.put("/bulk-product-delete", ProductControllers.bulkProductDelete);
+
 router.get("/", auth("user"), ProductControllers.getAllProducts);
 
 router.get("/:id", ProductControllers.getAProductById);

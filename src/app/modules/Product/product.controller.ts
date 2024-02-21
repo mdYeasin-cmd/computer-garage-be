@@ -70,10 +70,24 @@ const deleteAProductById = catchAsync(async (req, res) => {
     });
 });
 
+const bulkProductDelete = catchAsync(async (req, res) => {
+    const productIds = req.body;
+
+    const result = await ProductServices.bulkProductDeleteFromDB(productIds);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Products are deleted successfully",
+        data: result,
+    });
+});
+
 export const ProductControllers = {
     addProduct,
     getAllProducts,
     getAProductById,
     updateAProductById,
     deleteAProductById,
+    bulkProductDelete,
 };
