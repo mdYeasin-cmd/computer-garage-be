@@ -7,4 +7,4 @@ router.post("/", SaleControllers.addASaleInfo);
 
 router.get("/history", SaleControllers.getSalesHistory);
 
-export const ProductRoutes = router;
+export const SaleRoutes = router;

@@ -17,9 +17,7 @@ const addASaleInfo = catchAsync(async (req, res) => {
 });
 
 const getSalesHistory = catchAsync(async (req, res) => {
-    const query = req.query;
-
-    const result = await SaleServices.getSalesHistoryFromDB(query);
+    const result = await SaleServices.getSalesHistoryFromDB();
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

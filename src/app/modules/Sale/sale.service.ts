@@ -7,8 +7,8 @@ const addASaleInfoIntoDB = (saleData: TSale) => {
     return result;
 };
 
-const getSalesHistoryFromDB = (query: Record<string, unknown>) => {
-    const result = Sale.find(query);
+const getSalesHistoryFromDB = () => {
+    const result = Sale.find().populate("productId");
 
     return result;
 };
