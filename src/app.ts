@@ -12,9 +12,14 @@ const app: Application = express();
 app.use(express.json());
 app.use(
     cors({
-        origin: ["http://localhost:5173"],
+        origin: [
+            "http://localhost:5173",
+            "https://computer-garage-fe.vercel.app",
+        ],
     }),
 );
+
+// https://computer-garage-fe.vercel.app
 
 // application routes
 app.use("/api/v1", router);

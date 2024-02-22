@@ -17,6 +17,10 @@ const addASaleInfo = catchAsync(async (req, res) => {
 });
 
 const getSalesHistory = catchAsync(async (req, res) => {
+    const userId = req.user;
+
+    console.log(userId, "user id");
+
     const result = await SaleServices.getSalesHistoryFromDB();
 
     sendResponse(res, {

@@ -1,14 +1,14 @@
 import { TSale } from "./sale.interface";
 import { Sale } from "./sale.model";
 
-const addASaleInfoIntoDB = (saleData: TSale) => {
-    const result = Sale.create(saleData);
+const addASaleInfoIntoDB = async (saleData: TSale) => {
+    const result = await Sale.create(saleData);
 
     return result;
 };
 
-const getSalesHistoryFromDB = () => {
-    const result = Sale.find().populate("productId");
+const getSalesHistoryFromDB = async () => {
+    const result = await Sale.find();
 
     return result;
 };
