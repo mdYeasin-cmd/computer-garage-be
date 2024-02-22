@@ -3,6 +3,10 @@ import { TProduct } from "./product.interface";
 
 const productSchema = new Schema<TProduct>(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         category: {
             type: String,
             required: true,
@@ -11,45 +15,37 @@ const productSchema = new Schema<TProduct>(
             type: String,
             required: true,
         },
-        name: {
-            type: String,
-            required: true,
-        },
-        compatibility: {
-            type: String,
+        price: {
+            type: Number,
             required: true,
         },
         quantity: {
             type: Number,
             required: true,
         },
-        interface: {
-            type: String,
-            required: true,
-        },
-        condition: {
-            type: String,
-            required: true,
-        },
-        capacity: {
-            type: String,
-            required: true,
-        },
-        price: {
-            type: Number,
-            required: true,
-        },
-        warrantyPeriod: {
-            type: Number,
-            required: true,
-        },
-        color: {
-            type: String,
-        },
         availability: {
             type: String,
             enum: ["in stock", "out of stock"],
             required: true,
+        },
+        compatibility: {
+            type: String,
+        },
+        interface: {
+            type: String,
+        },
+        condition: {
+            type: String,
+        },
+        capacity: {
+            type: String,
+        },
+
+        warrantyPeriod: {
+            type: Number,
+        },
+        color: {
+            type: String,
         },
         description: {
             type: String,
