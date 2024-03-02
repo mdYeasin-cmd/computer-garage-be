@@ -23,6 +23,20 @@ const registerValidatorSchema = z.object({
             .max(32, {
                 message: "Password length can't be more then 32 characters",
             }),
+        role: z.enum(["buyer", "seller"] as [string, ...string[]], {
+            errorMap: (issue) => {
+                switch (issue.code) {
+                    case "invalid_type":
+                        return { message: "Role must be a string" };
+                    case "invalid_enum_value":
+                        return {
+                            message: "Role value must be 'buyer' or 'seller'",
+                        };
+                    default:
+                        return { message: "Role is required" };
+                }
+            },
+        }),
     }),
 });
 

@@ -7,7 +7,7 @@ export interface TUser extends Document {
     email: string;
     photoUrl?: string;
     password: string;
-    role: "user";
+    role: "buyer" | "seller";
 }
 
 export interface UserModel extends Model<TUser> {
