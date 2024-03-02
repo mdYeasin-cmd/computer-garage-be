@@ -27,51 +27,47 @@ const createProductValidatorSchema = z.object({
             })
             .int()
             .positive(),
-        availability: z.enum(["in stock", "out of stock"]).refine(
+        availability: z.enum(["In stock", "Out of stock"]).refine(
             (value) => {
-                return value === "in stock" || value === "out of stock";
+                return value === "In stock" || value === "Out of stock";
             },
             {
                 message:
                     "Availability must be either 'in stock' or 'out of stock'",
             },
         ),
+        warrantyPeriod: z
+            .number({
+                invalid_type_error: "Warranty period must be a positive number",
+            })
+            .positive()
+            .optional(),
         compatibility: z
             .string({
-                required_error: "Compatibility is required",
                 invalid_type_error: "Compatibility must be a string",
             })
             .optional(),
         interface: z
             .string({
-                required_error: "Interface is required",
                 invalid_type_error: "Interface must be a string",
             })
-            .optional(),
-        condition: z
-            .string({
-                required_error: "Condition is required",
-                invalid_type_error: "Condition must be a string",
-            })
-            .optional(),
-        capacity: z
-            .string({
-                required_error: "Capacity is required",
-                invalid_type_error: "Capacity must be a string",
-            })
-            .optional(),
-        warrantyPeriod: z
-            .number({
-                required_error: "Warranty period is required",
-                invalid_type_error: "Warranty period must be a positive number",
-            })
-            .positive()
             .optional(),
         color: z
             .string({
                 invalid_type_error: "Color must be a string",
             })
             .optional(),
+        capacity: z
+            .string({
+                invalid_type_error: "Capacity must be a string",
+            })
+            .optional(),
+        condition: z
+            .string({
+                invalid_type_error: "Condition must be a string",
+            })
+            .optional(),
+
         description: z
             .string({
                 invalid_type_error: "Color must be a string",

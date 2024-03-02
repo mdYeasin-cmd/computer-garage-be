@@ -4,9 +4,10 @@ import sendResponse from "../../utils/sendResponse";
 import { ProductServices } from "./product.service";
 
 const addProduct = catchAsync(async (req, res) => {
+    const userId = req.user._id;
     const productInfo = req.body;
 
-    const result = await ProductServices.addProductIntoDB(productInfo);
+    const result = await ProductServices.addProductIntoDB(userId, productInfo);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -41,10 +42,12 @@ const getAProductById = catchAsync(async (req, res) => {
 });
 
 const updateAProductById = catchAsync(async (req, res) => {
+    const userId = req.user._id;
     const productId = req.params.id;
     const productData = req.body;
 
     const result = await ProductServices.updateAProductByIdIntoDB(
+        userId,
         productId,
         productData,
     );

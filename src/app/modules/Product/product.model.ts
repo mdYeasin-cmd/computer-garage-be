@@ -28,27 +28,31 @@ const productSchema = new Schema<TProduct>(
             enum: ["in stock", "out of stock"],
             required: true,
         },
+        warrantyPeriod: {
+            type: Number,
+        },
         compatibility: {
             type: String,
         },
         interface: {
             type: String,
         },
-        condition: {
+        color: {
             type: String,
         },
         capacity: {
             type: String,
         },
-
-        warrantyPeriod: {
-            type: Number,
-        },
-        color: {
+        condition: {
             type: String,
         },
         description: {
             type: String,
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "User",
         },
     },
     {

@@ -8,11 +8,11 @@ router.post("/", ProductControllers.addProduct);
 
 router.put("/bulk-product-delete", ProductControllers.bulkProductDelete);
 
-router.get("/", auth("user"), ProductControllers.getAllProducts);
+router.get("/", auth("seller", "buyer"), ProductControllers.getAllProducts);
 
 router.get("/:id", ProductControllers.getAProductById);
 
-router.patch("/:id", ProductControllers.updateAProductById);
+router.patch("/:id", auth("seller"), ProductControllers.updateAProductById);
 
 router.delete("/:id", ProductControllers.deleteAProductById);
 

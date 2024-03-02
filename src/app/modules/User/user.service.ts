@@ -23,6 +23,7 @@ const loginUser = async (payload: Partial<TUser>) => {
     }
 
     const jwtPayload = {
+        _id: user?._id,
         name: user?.name,
         email: user?.email,
         role: user?.role,

@@ -1,7 +1,26 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
+import { User } from "../User/user.model";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
+import { USER_ROLE } from "../User/user.constant";
 
-const addProductIntoDB = async (productInfo: TProduct) => {
+const addProductIntoDB = async (userId: string, productInfo: TProduct) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
+    }
+
+    if (user && user.role !== USER_ROLE.seller) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "You are not a sellter. Only seller can add a product.",
+        );
+    }
+
+    productInfo.userId = user?._id;
+
     const result = await Product.create(productInfo);
 
     return result;
@@ -20,9 +39,32 @@ const getAProductByIdFromDB = async (productId: string) => {
 };
 
 const updateAProductByIdIntoDB = async (
+    userId: string,
     productId: string,
     productData: Partial<TProduct>,
 ) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
+    }
+
+    if (user && user.role !== USER_ROLE.seller) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "You are not a sellter. Only seller can update product information.",
+        );
+    }
+
+    const product = await Product.findById(productId);
+
+    if (product?.userId !== user?._id) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "You are not owner of this product. Only owner can update product information.",
+        );
+    }
+
     const result = Product.findByIdAndUpdate(productId, productData);
 
     return result;

@@ -1,15 +1,18 @@
+import { ObjectId } from "mongoose";
+
 export type TProduct = {
+    name: string;
     category: string;
     brand: string;
-    name: string;
-    compatibility: string;
-    quantity: number;
-    interface: string;
-    condition: string;
-    capacity: string;
     price: number;
+    quantity: number;
+    availability: "In stock" | "Out of stock";
     warrantyPeriod: number;
+    compatibility: string;
+    interface: string;
     color?: string;
-    availability: "in stock" | "out of stock";
+    capacity: string;
+    condition: string;
     description: string;
+    userId: ObjectId;
 };
