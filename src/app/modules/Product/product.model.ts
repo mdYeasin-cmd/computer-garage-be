@@ -25,7 +25,7 @@ const productSchema = new Schema<TProduct>(
         },
         availability: {
             type: String,
-            enum: ["in stock", "out of stock"],
+            enum: ["In stock", "Out of stock"],
             required: true,
         },
         warrantyPeriod: {

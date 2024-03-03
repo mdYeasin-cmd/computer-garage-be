@@ -19,6 +19,7 @@ const userSchema = new Schema<TUser, UserModel>(
             required: true,
             minlength: 6,
             maxlength: 32,
+            select: false,
         },
         role: {
             type: String,

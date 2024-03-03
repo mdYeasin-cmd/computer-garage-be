@@ -4,19 +4,13 @@ import { User } from "../User/user.model";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 import { USER_ROLE } from "../User/user.constant";
+import { SortOrder } from "mongoose";
 
 const addProductIntoDB = async (userId: string, productInfo: TProduct) => {
     const user = await User.findById(userId);
 
     if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
-    }
-
-    if (user && user.role !== USER_ROLE.seller) {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "You are not a sellter. Only seller can add a product.",
-        );
     }
 
     productInfo.userId = user?._id;
@@ -26,10 +20,119 @@ const addProductIntoDB = async (userId: string, productInfo: TProduct) => {
     return result;
 };
 
-const getAllProductsFromDB = async () => {
-    const result = await Product.find({}).sort({ createdAt: -1 });
+const getAllProductsFromDB = async (
+    userId: string,
+    query: Record<string, unknown>,
+) => {
+    const user = await User.findById(userId);
 
-    return result;
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
+    }
+
+    const filters: Record<string, unknown> = {};
+
+    if (user?.role === USER_ROLE.seller) {
+        filters.userId = user?._id;
+    }
+
+    if (query.category) {
+        filters.category = query.category;
+    }
+
+    if (query.brand) {
+        filters.brand = query.brand;
+    }
+
+    if (query.compatibility) {
+        filters.compatibility = query.compatibility;
+    }
+
+    if (query?.minPrice && !query?.maxPrice) {
+        filters.price = { $gte: query.minPrice };
+    }
+
+    if (!query?.minPrice && query?.maxPrice) {
+        filters.price = { $lte: query.maxPrice };
+    }
+
+    if (query?.minPrice && query?.maxPrice) {
+        const minPrice = Number(query.minPrice);
+        const maxPrice = Number(query.maxPrice);
+        filters.price = {
+            $gte: minPrice,
+            $lte: maxPrice,
+        };
+    }
+
+    if (query.interface) {
+        filters.interface = query.interface;
+    }
+
+    if (query.condition) {
+        filters.condition = query.condition;
+    }
+
+    if (query.capacity) {
+        filters.capacity = query.capacity;
+    }
+
+    if (query.color) {
+        filters.color = query.color;
+    }
+
+    let sortBy: string = "createdAt";
+    let sortOrder: SortOrder = "desc";
+
+    if (query?.sortBy) {
+        sortBy = query.sortBy as string;
+    }
+
+    if (query?.sortOrder) {
+        sortOrder = query?.sortOrder === "asc" ? 1 : -1;
+    }
+
+    const sortByFields = sortBy.split(",");
+
+    const sortObject: Record<string, SortOrder> = {};
+
+    sortByFields.forEach((field) => {
+        sortObject[field] = sortOrder;
+    });
+
+    let limit: number = 10;
+    let page: number = 1;
+    let skip: number = 0;
+
+    if (query?.limit) {
+        limit = Number(query.limit);
+    }
+
+    if (query?.page) {
+        page = Number(query.page);
+        skip = (page - 1) * limit;
+    }
+
+    const result = await Product.find(filters)
+        .populate("userId")
+        .sort(sortObject)
+        .skip(skip)
+        .limit(limit);
+
+    const total = await Product.countDocuments(filters);
+    const totalPage = Math.ceil(total / limit);
+
+    const meta = {
+        page,
+        limit,
+        total,
+        totalPage,
+    };
+
+    return {
+        meta,
+        result,
+    };
 };
 
 const getAProductByIdFromDB = async (productId: string) => {
@@ -49,23 +152,18 @@ const updateAProductByIdIntoDB = async (
         throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
     }
 
-    if (user && user.role !== USER_ROLE.seller) {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "You are not a sellter. Only seller can update product information.",
-        );
-    }
-
     const product = await Product.findById(productId);
 
-    if (product?.userId !== user?._id) {
+    if (String(user?._id) !== String(product?.userId)) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "You are not owner of this product. Only owner can update product information.",
         );
     }
 
-    const result = Product.findByIdAndUpdate(productId, productData);
+    const result = Product.findByIdAndUpdate(product?._id, productData, {
+        new: true,
+    });
 
     return result;
 };
