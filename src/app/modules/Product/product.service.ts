@@ -4,7 +4,8 @@ import { User } from "../User/user.model";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 import { USER_ROLE } from "../User/user.constant";
-import { SortOrder } from "mongoose";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { productSearchableFields } from "./product.constant";
 
 const addProductIntoDB = async (userId: string, productInfo: TProduct) => {
     const user = await User.findById(userId);
@@ -30,109 +31,20 @@ const getAllProductsFromDB = async (
         throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
     }
 
-    const filters: Record<string, unknown> = {};
-
-    if (user?.role === USER_ROLE.seller) {
-        filters.userId = user?._id;
+    if (user.role === USER_ROLE.seller) {
+        query._id = user._id;
     }
 
-    if (query.category) {
-        filters.category = query.category;
-    }
+    const productQuery = new QueryBuilder(Product.find(), query)
+        .search(productSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
 
-    if (query.brand) {
-        filters.brand = query.brand;
-    }
+    const result = await productQuery.modelQuery;
 
-    if (query.compatibility) {
-        filters.compatibility = query.compatibility;
-    }
-
-    if (query?.minPrice && !query?.maxPrice) {
-        filters.price = { $gte: query.minPrice };
-    }
-
-    if (!query?.minPrice && query?.maxPrice) {
-        filters.price = { $lte: query.maxPrice };
-    }
-
-    if (query?.minPrice && query?.maxPrice) {
-        const minPrice = Number(query.minPrice);
-        const maxPrice = Number(query.maxPrice);
-        filters.price = {
-            $gte: minPrice,
-            $lte: maxPrice,
-        };
-    }
-
-    if (query.interface) {
-        filters.interface = query.interface;
-    }
-
-    if (query.condition) {
-        filters.condition = query.condition;
-    }
-
-    if (query.capacity) {
-        filters.capacity = query.capacity;
-    }
-
-    if (query.color) {
-        filters.color = query.color;
-    }
-
-    let sortBy: string = "createdAt";
-    let sortOrder: SortOrder = "desc";
-
-    if (query?.sortBy) {
-        sortBy = query.sortBy as string;
-    }
-
-    if (query?.sortOrder) {
-        sortOrder = query?.sortOrder === "asc" ? 1 : -1;
-    }
-
-    const sortByFields = sortBy.split(",");
-
-    const sortObject: Record<string, SortOrder> = {};
-
-    sortByFields.forEach((field) => {
-        sortObject[field] = sortOrder;
-    });
-
-    let limit: number = 10;
-    let page: number = 1;
-    let skip: number = 0;
-
-    if (query?.limit) {
-        limit = Number(query.limit);
-    }
-
-    if (query?.page) {
-        page = Number(query.page);
-        skip = (page - 1) * limit;
-    }
-
-    const result = await Product.find(filters)
-        .populate("userId")
-        .sort(sortObject)
-        .skip(skip)
-        .limit(limit);
-
-    const total = await Product.countDocuments(filters);
-    const totalPage = Math.ceil(total / limit);
-
-    const meta = {
-        page,
-        limit,
-        total,
-        totalPage,
-    };
-
-    return {
-        meta,
-        result,
-    };
+    return result;
 };
 
 const getAProductByIdFromDB = async (productId: string) => {
