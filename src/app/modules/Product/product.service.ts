@@ -32,7 +32,7 @@ const getAllProductsFromDB = async (
     }
 
     if (user.role === USER_ROLE.seller) {
-        query._id = user._id;
+        query.userId = user._id;
     }
 
     const productQuery = new QueryBuilder(Product.find(), query)

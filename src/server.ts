@@ -11,7 +11,9 @@ async function main() {
         console.log("Database connection established successfully.");
 
         server = app.listen(config.port, () => {
-            console.log(`Computer Garage app listening on port ${config.port}`);
+            console.log(
+                `Computer Garage running at http://127.0.0.0:${config.port}`,
+            );
         });
     } catch (error) {
         console.log(error, "Error from server.ts file");
