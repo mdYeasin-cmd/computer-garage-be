@@ -4,9 +4,10 @@ import sendResponse from "../../utils/sendResponse";
 import { SaleServices } from "./sale.service";
 
 const addASaleInfo = catchAsync(async (req, res) => {
+    const userId = req.user._id;
     const saleInfo = req.body;
 
-    const result = await SaleServices.addASaleInfoIntoDB(saleInfo);
+    const result = await SaleServices.addASaleInfoIntoDB(userId, saleInfo);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -17,11 +18,9 @@ const addASaleInfo = catchAsync(async (req, res) => {
 });
 
 const getSalesHistory = catchAsync(async (req, res) => {
-    const userId = req.user;
+    const userId = req.user._id;
 
-    console.log(userId, "user id");
-
-    const result = await SaleServices.getSalesHistoryFromDB();
+    const result = await SaleServices.getSalesHistoryFromDB(userId);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

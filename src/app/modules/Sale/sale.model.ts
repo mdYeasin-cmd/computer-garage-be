@@ -2,6 +2,10 @@ import { Schema, model } from "mongoose";
 import { TSale } from "./sale.interface";
 
 const saleSchema = new Schema<TSale>({
+    sellerId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+    },
     productId: {
         type: Schema.Types.ObjectId,
         required: true,

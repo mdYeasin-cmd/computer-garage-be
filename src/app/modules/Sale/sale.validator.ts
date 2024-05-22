@@ -2,6 +2,10 @@ import z from "zod";
 
 const createSaleValidatorSchema = z.object({
     body: z.object({
+        sellerId: z.string({
+            required_error: "Seller id is required",
+            invalid_type_error: "Seller id must be a string",
+        }),
         productId: z.string({
             required_error: "Product id is required",
             invalid_type_error: "Product id must be a string",

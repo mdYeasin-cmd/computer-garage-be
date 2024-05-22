@@ -31,6 +31,8 @@ const getAllProductsFromDB = async (
         throw new AppError(httpStatus.NOT_FOUND, "This user not found.");
     }
 
+    query.availability = "In stock";
+
     if (user.role === USER_ROLE.seller) {
         query.userId = user._id;
     }
