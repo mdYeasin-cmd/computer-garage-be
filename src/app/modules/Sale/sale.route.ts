@@ -4,8 +4,14 @@ import auth from "../../middlewares/auth";
 
 const router = express.Router();
 
-router.post("/", auth("seller"), SaleControllers.addASaleInfo);
+router.post("/", auth("seller", "buyer"), SaleControllers.addASaleInfo);
 
-router.get("/history", auth("seller"), SaleControllers.getSalesHistory);
+router.get("/sale-history", auth("seller"), SaleControllers.getSalesHistory);
+
+router.get(
+    "/purchase-history",
+    auth("buyer"),
+    SaleControllers.getPurchasesHistory,
+);
 
 export const SaleRoutes = router;

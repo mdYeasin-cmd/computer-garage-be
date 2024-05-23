@@ -6,6 +6,11 @@ const createSaleValidatorSchema = z.object({
             required_error: "Seller id is required",
             invalid_type_error: "Seller id must be a string",
         }),
+        buyerId: z
+            .string({
+                invalid_type_error: "Seller id must be a string",
+            })
+            .optional(),
         productId: z.string({
             required_error: "Product id is required",
             invalid_type_error: "Product id must be a string",

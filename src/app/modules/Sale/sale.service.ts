@@ -1,11 +1,11 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { TSale } from "./sale.interface";
 import { Sale } from "./sale.model";
 import { Product } from "../Product/product.model";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 
-const addASaleInfoIntoDB = async (sellerId: ObjectId, saleData: TSale) => {
+const addASaleInfoIntoDB = async (saleData: TSale) => {
     const session = await mongoose.startSession();
 
     try {
@@ -48,8 +48,6 @@ const addASaleInfoIntoDB = async (sellerId: ObjectId, saleData: TSale) => {
             session,
         });
 
-        saleData.sellerId = sellerId;
-
         const result = await Sale.create([saleData], { session });
 
         await session.commitTransaction();
@@ -65,7 +63,17 @@ const addASaleInfoIntoDB = async (sellerId: ObjectId, saleData: TSale) => {
 };
 
 const getSalesHistoryFromDB = async (userId: string) => {
-    const result = await Sale.find({ sellerId: userId });
+    const result = await Sale.find({ sellerId: userId }).sort({
+        createdAt: -1,
+    });
+
+    return result;
+};
+
+const getPurchasesHistoryFromDB = async (userId: string) => {
+    const result = await Sale.find({ buyerId: userId })
+        .sort({ createdAt: -1 })
+        .populate("sellerId");
 
     return result;
 };
@@ -73,4 +81,5 @@ const getSalesHistoryFromDB = async (userId: string) => {
 export const SaleServices = {
     addASaleInfoIntoDB,
     getSalesHistoryFromDB,
+    getPurchasesHistoryFromDB,
 };
